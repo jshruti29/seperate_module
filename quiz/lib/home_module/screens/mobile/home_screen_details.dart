@@ -50,7 +50,11 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
   String greetingMessageInitial = "Good Night";
   int _pageIndex = 0;
   String apiLogo = "";
-
+  String userid = "1471200",
+      userHash = "94bbc28759737bdd6b9cbf174643a5d",
+      appId = "3006",
+      appHash = "68023c08f278466f0c53981d225e541",
+      appVersion = "";
   void isAccessAllow(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(SessionString.accessAllow) &&
@@ -100,15 +104,15 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
       greetingMessage();
       // appLogo(context);
     });
-    getDataOfCards();
+    // getDataOfCards();
     qrCodeApiCall();
   }
 
   Future<dynamic> qrCodeApiCall() async {
     ApiProvider _apiProvider = ApiProvider();
     var bodyDataMap = {
-      SessionString.userHash: store.studentData.userHash.toString(),
-      SessionString.userId: store.studentData.userId.toString(),
+      SessionString.userHash: userHash,
+      SessionString.userId: userid,
       SessionString.appIdKey: Global.appId.toString(),
     };
     var receivedData = await _apiProvider.post(
@@ -125,46 +129,46 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
     }
   }
 
-  Future<void> getDataOfCards() async {
-    SharedPreference prefs = SharedPreference();
-    //List<String> permissions = store.studentPermission.studentPermissions!;
-    if (await prefs.containsKey('homelist')) {
-      List<String>? homeList = await prefs.getStringList('homelist');
-      List data = homeList!.map((e) => jsonDecode(e)).toList();
-      List<HomeElements> tempData =
-          data.map((e) => HomeElements.fromJson(e)).toList();
-      List<HomeElements> tempDataNew = store.clientData.homeElements!;
-      List tempDataCheck = tempDataNew.map((e) => jsonEncode(e)).toList();
-      if (tempDataCheck.length != 0) {
-        tempData.clear();
-        tempData += tempDataCheck
-            .map((e) => HomeElements.fromJson(jsonDecode(e)))
-            .toList();
-        if (await prefs.containsKey('homelist')) {
-          await prefs.stringListClear("homelist");
-        }
-        prefs.setStringList(
-            'homelist', tempData.map((e) => jsonEncode(e)).toList());
-      }
-      getCards(tempData, permissions);
-      setState(() {
-        isDone = true;
-      });
-      print("tempData--" + tempData.toString());
-    } else {
-      List<HomeElements> tempData = store.clientData.homeElements!;
-      getCards(tempData, permissions);
-      setState(() {
-        isDone = true;
-      });
-      print("tempData--" + tempData.toString());
-      if (await prefs.containsKey('homelist')) {
-        prefs.stringListClear("homelist");
-      }
-      prefs.setStringList(
-          'homelist', tempData.map((e) => jsonEncode(e)).toList());
-    }
-  }
+  // Future<void> getDataOfCards() async {
+  //   SharedPreference prefs = SharedPreference();
+  //   //List<String> permissions = store.studentPermission.studentPermissions!;
+  //   if (await prefs.containsKey('homelist')) {
+  //     List<String>? homeList = await prefs.getStringList('homelist');
+  //     List data = homeList!.map((e) => jsonDecode(e)).toList();
+  //     List<HomeElements> tempData =
+  //         data.map((e) => HomeElements.fromJson(e)).toList();
+  //     //   List<HomeElements> tempDataNew = store.clientData.homeElements!;
+  //     //  List tempDataCheck = tempDataNew.map((e) => jsonEncode(e)).toList();
+  //     // if (tempDataCheck.length != 0) {
+  //     //   tempData.clear();
+  //     //   tempData += tempDataCheck
+  //     //       .map((e) => HomeElements.fromJson(jsonDecode(e)))
+  //     //       .toList();
+  //     //   if (await prefs.containsKey('homelist')) {
+  //     //     await prefs.stringListClear("homelist");
+  //     //   }
+  //     //   prefs.setStringList(
+  //     //       'homelist', tempData.map((e) => jsonEncode(e)).toList());
+  //     // }
+  //     getCards(tempData, permissions);
+  //     setState(() {
+  //       isDone = true;
+  //     });
+  //     // print("tempData--" + tempData.toString());
+  //   } else {
+  //      //List<HomeElements> tempData = store.clientData.homeElements!;
+  //     getCards(tempData, permissions);
+  //     setState(() {
+  //       isDone = true;
+  //     });
+  //     //print("tempData--" + tempData.toString());
+  //     if (await prefs.containsKey('homelist')) {
+  //       prefs.stringListClear("homelist");
+  //     }
+  //     prefs.setStringList(
+  //         'homelist', tempData.map((e) => jsonEncode(e)).toList());
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -229,7 +233,8 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.90,
                 child: Text(
-                    '$greetingMessageInitial ${store.studentData.userFirstName.toString()[0].toUpperCase() + store.studentData.userFirstName.toString().substring(1)}',
+                    // '$greetingMessageInitial ${}',
+                    'user',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.lato(
@@ -472,31 +477,31 @@ class _HomeScreenDetailsState extends State<HomeScreenDetails> {
     _tiles.insert(newIndex, row);
   }
 
-  void onTabTapped(int index) {
-    switch (index) {
-      case 1:
-        {
-          NavigatorClass().navigateToBookmarkScreen(context);
-        }
-        break;
-      case 2:
-        {
-          NavigatorClass().navigateToInstituteNotificationScreen(context);
-        }
-        break;
-      case 3:
-        {
-          InternetUtil.isInternetAvailable((status) async {
-            if (status) {
-              NavigatorClass().navigateToProfileScreen(context);
-            } else {
-              showCustomSnackBar(context, ValueString.NO_INTERNET);
-            }
-          });
-        }
-        break;
-    }
-  }
+  // void onTabTapped(int index) {
+  //   switch (index) {
+  //     case 1:
+  //       {
+  //         NavigatorClass().navigateToBookmarkScreen(context);
+  //       }
+  //       break;
+  //     case 2:
+  //       {
+  //         NavigatorClass().navigateToInstituteNotificationScreen(context);
+  //       }
+  //       break;
+  //     case 3:
+  //       {
+  //         InternetUtil.isInternetAvailable((status) async {
+  //           if (status) {
+  //             NavigatorClass().navigateToProfileScreen(context);
+  //           } else {
+  //             showCustomSnackBar(context, ValueString.NO_INTERNET);
+  //           }
+  //         });
+  //       }
+  //       break;
+  //   }
+  // }
 }
 
 class IconData {
