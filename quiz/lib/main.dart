@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quiz/home_module/bloc/home_screen_events.dart';
+import 'package:quiz/home_module/screens/mobile/home_screen.dart';
 import 'package:quiz/quiz_module/screens/mobile/quiz_screen.dart';
 
 void main() {
@@ -12,12 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-      
-        primarySwatch: Colors.blue,
-      ),
-      home: QuizScreen(),
+      home: HomeScreen(),
     );
   }
 }

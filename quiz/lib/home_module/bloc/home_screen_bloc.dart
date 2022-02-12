@@ -33,6 +33,7 @@ import 'package:quiz/home_module/model/get_full_length_test_model.dart';
 import 'package:quiz/home_module/repository/home_screen_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:bloc/bloc.dart';
 
 import 'home_screen_events.dart';
 import 'home_screen_states.dart';
