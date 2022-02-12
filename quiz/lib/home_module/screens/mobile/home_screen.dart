@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
               //         .navigateToAppUpdateAndExpiryScreen(context, true);
               //   }
               // }
-              homeScreenBloc!.setExamDataIntoDb(state.appCheckVersionModel!);
+              // homeScreenBloc!.setExamDataIntoDb(state.appCheckVersionModel!);
             }
           }),
         ),

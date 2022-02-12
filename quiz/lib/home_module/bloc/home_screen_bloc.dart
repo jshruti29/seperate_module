@@ -200,7 +200,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvents, HomeScreenStates> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         GetAppInfoModel getAppInfoModel =
             await homeScreenRepository.fetchAppConfig();
-        store.clientData = getAppInfoModel;
+        // store.clientData = getAppInfoModel;
         if (getAppInfoModel.homeElements != null) {
           List<HomeElements> finalList = [];
           finalList = new List.empty(growable: true);
@@ -214,13 +214,13 @@ class HomeScreenBloc extends Bloc<HomeScreenEvents, HomeScreenStates> {
           prefs.setStringList(
               'homelist', finalList.map((e) => jsonEncode(e)).toList());
         }
-        if (store.clientData.flag != 1)
-          yield GetAppConfigErrorState();
-        else {
-          store.clientData.homeElements!.forEach((element) {
-            store.clientPermissionList.add(element.homeElementId);
-          });
-        }
+        // if (store.clientData.flag != 1)
+        //   yield GetAppConfigErrorState();
+        // else {
+        //   store.clientData.homeElements!.forEach((element) {
+        //     store.clientPermissionList.add(element.homeElementId);
+        //   });
+        // }
         yield GetAppConfigLoadedState();
       } catch (e) {
         AppCrash().appCrashInfo(
@@ -232,60 +232,61 @@ class HomeScreenBloc extends Bloc<HomeScreenEvents, HomeScreenStates> {
     }
     if (event is FetchHomeDataEvent) {
       SharedPreference prefs = SharedPreference();
-      List<String> permissions = store.studentPermission.studentPermissions!;
+      // List<String> permissions = store.studentPermission.studentPermissions!;
       if (await prefs.containsKey('homelist')) {
         List<String>? homeList = await prefs.getStringList('homelist');
         List data = homeList!.map((e) => jsonDecode(e)).toList();
         List<HomeElements> tempData =
             data.map((e) => HomeElements.fromJson(e)).toList();
-        List<HomeElements> tempDataNew = store.clientData.homeElements!;
-        List tempDataCheck = tempDataNew.map((e) => jsonEncode(e)).toList();
-        if (tempDataCheck.length != 0) {
-          tempData.clear();
-          tempData += tempDataCheck
-              .map((e) => HomeElements.fromJson(jsonDecode(e)))
-              .toList();
-          if (await prefs.containsKey('homelist')) {
-            await prefs.stringListClear("homelist");
-          }
-          prefs.setStringList(
-              'homelist', tempData.map((e) => jsonEncode(e)).toList());
-        }
+        //  List<HomeElements> tempDataNew = store.clientData.homeElements!;
+        // List tempDataCheck = tempDataNew.map((e) => jsonEncode(e)).toList();
+        // if (tempDataCheck.length != 0) {
+        //   tempData.clear();
+        //   tempData += tempDataCheck
+        //       .map((e) => HomeElements.fromJson(jsonDecode(e)))
+        //       .toList();
+        //   if (await prefs.containsKey('homelist')) {
+        //     await prefs.stringListClear("homelist");
+        //   }
+        //   prefs.setStringList(
+        //       'homelist', tempData.map((e) => jsonEncode(e)).toList());
+        // }
 
         print("tempData--" + tempData.toString());
 
-        yield FetchHomeDataLoadedState(
-            tempData: tempData, permissions: permissions);
-      } else {
-        List<HomeElements> tempData = store.clientData.homeElements!;
-        print("tempData--" + tempData.toString());
-        yield FetchHomeDataLoadedState(
-            tempData: tempData, permissions: permissions);
-        if (await prefs.containsKey('homelist')) {
-          prefs.stringListClear("homelist");
-        }
-        prefs.setStringList(
-            'homelist', tempData.map((e) => jsonEncode(e)).toList());
+        // yield FetchHomeDataLoadedState(
+        //     tempData: tempData, permissions: permissions);
+        // } else {
+        //   List<HomeElements> tempData = store.clientData.homeElements!;
+        //   print("tempData--" + tempData.toString());
+        //   yield FetchHomeDataLoadedState(
+        //       tempData: tempData, permissions: permissions);
+        //   if (await prefs.containsKey('homelist')) {
+        //     prefs.stringListClear("homelist");
+        //   }
+        //   prefs.setStringList(
+        //       'homelist', tempData.map((e) => jsonEncode(e)).toList());
+        // }
       }
     }
-  }
 
-  void setExamDataIntoDb(AppCheckVersionModel appCheckVersionModel) {
-    final box = store.dataStore.box<ExamElement>();
-    store.dataStore.runInTransaction(TxMode.write, () {
-      List<ExamElement> dataNew = appCheckVersionModel.exams!
-          .map((element) => ExamElement(
-              exam_id: element.examId,
-              exam_title_1: element.examTitle1,
-              exam_name: element.examName,
-              exam_title_2: element.examTitle2,
-              sequence_no: element.sequenceNo,
-              status: element.status,
-              tag: element.tag))
-          .sortedByNum((element) => element.sequence_no as num)
-          .toList();
-      box.removeAll();
-      box.putMany(dataNew);
-    });
+    void setExamDataIntoDb(AppCheckVersionModel appCheckVersionModel) {
+      final box = store.dataStore.box<ExamElement>();
+      store.dataStore.runInTransaction(TxMode.write, () {
+        List<ExamElement> dataNew = appCheckVersionModel.exams!
+            .map((element) => ExamElement(
+                exam_id: element.examId,
+                exam_title_1: element.examTitle1,
+                exam_name: element.examName,
+                exam_title_2: element.examTitle2,
+                sequence_no: element.sequenceNo,
+                status: element.status,
+                tag: element.tag))
+            .sortedByNum((element) => element.sequence_no as num)
+            .toList();
+        box.removeAll();
+        box.putMany(dataNew);
+      });
+    }
   }
 }
